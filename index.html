@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Bestie ❤️</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #000000;
+            --primary-pink: #ff2d75;
+            --luxury-purple: #7000ff;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Background Luxury Elements */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, #2d0b31 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, #1a0033 0%, transparent 50%);
+            z-index: -2;
+        }
+
+        #stars-container, #hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .loader-content {
+            text-align: center;
+            width: 80%;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-pink), var(--luxury-purple));
+            box-shadow: 0 0 15px var(--primary-pink);
+            transition: width 0.4s ease;
+        }
+
+        /* Section Handling */
+        section {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.1) translateY(30px);
+            filter: blur(15px);
+        }
+
+        .active {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1) translateY(0);
+            filter: blur(0);
+        }
+
+        /* Home Page */
+        .home-hero {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            padding: 50px 30px;
+            border-radius: 40px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        }
+
+        .main-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to bottom, #ffffff, #ff96c5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-weight: 300;
+            letter-spacing: 1.5px;
+            opacity: 0.8;
+            margin-bottom: 40px;
+            font-size: 0.9rem;
+        }
+
+        .btn-glow {
+            background: linear-gradient(45deg, var(--primary-pink), var(--luxury-purple));
+            border: none;
+            padding: 18px 50px;
+            border-radius: 100px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 45, 117, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-glow:active {
+            transform: scale(0.9);
+            box-shadow: 0 5px 15px rgba(255, 45, 117, 0.2);
+        }
+
+        /* Memories Grid */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 450px;
+            padding: 10px;
+        }
+
+        .memory-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            height: 180px;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            line-height: 1.4;
+        }
+
+        .memory-card:active {
+            transform: scale(0.92);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Detail Page */
+        #detail-page {
+            background: #000;
+            padding: 0;
+        }
+
+        .detail-header {
+            position: absolute;
+            top: 60px;
+            width: 90%;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-shadow: 0 4px 15px rgba(0,0,0,1);
+            color: #fff;
+        }
+
+   .image-viewer{
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+  #detail-image{
+    width:90%;
+    max-width:380px;
+    height:78vh;
+    object-fit:cover;
+
+    padding:8px;
+
+    border:4px solid rgba(255,255,255,.9);
+    border-radius:35px;
+
+    background:
+    linear-gradient(#000,#000) padding-box,
+    linear-gradient(45deg,#ff4d94,#ff9ecf,#ffffff,#ff4d94) border-box;
+
+    box-shadow:
+    0 0 20px rgba(255,77,148,.6),
+    0 0 40px rgba(255,77,148,.3),
+    0 20px 50px rgba(0,0,0,.6);
+
+    animation:imageSlowZoom 12s ease-in-out infinite alternate;
+}
+
+        @keyframes imageSlowZoom {
+            from { transform: scale(1) rotate(0deg); }
+            to { transform: scale(1.15) rotate(1deg); }
+        }
+
+        /* Navigation Buttons */
+        .bottom-controls {
+            position: absolute;
+            bottom: 50px;
+            display: flex;
+            gap: 15px;
+            z-index: 20;
+        }
+
+        .nav-btn {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 14px 22px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* Background Effects */
+        .heart {
+            position: absolute;
+            color: var(--primary-pink);
+            pointer-events: none;
+            animation: floatHeart 4s linear forwards;
+            z-index: -1;
+        }
+
+        @keyframes floatHeart {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 0.8; transform: translateY(80vh) scale(1); }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--dur) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-gradient"></div>
+    <div id="stars-container"></div>
+    <div id="hearts-container"></div>
+
+    <!-- 1. LOADING SCREEN -->
+    <section id="loading-screen" class="active">
+        <div class="loader-content">
+            <h2 class="main-title" style="font-size: 1.5rem;">❤️ Loading Beautiful Memories...</h2>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <p id="progress-text">0%</p>
+        </div>
+    </section>
+
+    <!-- 2. HOME PAGE -->
+    <section id="home-page" class="hidden">
+        <div class="home-hero">
+            <h1 class="main-title">❤️ For My Bestii ❤️</h1>
+            <p class="subtitle">A Small Surprise Made Only For You</p>
+            <button class="btn-glow" onclick="showMemories()">❤️ Start ❤️</button>
+        </div>
+    </section>
+
+    <!-- 3. MEMORIES PAGE -->
+    <section id="memories-page" class="hidden">
+        <div class="grid-container" id="cards-grid">
+            <!-- Cards generated by JS -->
+        </div>
+    </section>
+
+    <!-- 4. DETAIL PAGE -->
+    <section id="detail-page" class="hidden">
+        <div class="detail-header">
+            <h2 id="detail-question" class="question-text"></h2>
+        </div>
+        
+        <div class="image-viewer">
+            <img src="" id="detail-image" alt="Memory">
+        </div>
+
+        <div class="bottom-controls">
+            <button class="nav-btn" onclick="showMemories()">⬅ Back</button>
+            <button class="nav-btn" onclick="goHome()">🏠 Home</button>
+            <button class="nav-btn" onclick="toggleMusic()">
+                <span id="play-status">⏸ Pause</span>
+            </button>
+        </div>
+    </section>
+
+    <audio id="bg-audio" loop></audio>
+
+    <script>
+        const questions = [
+            "👀 Tum mujhe dekhte kyu rehte ho?",
+            "😴 Tum itne der tak kyu sote ho?",
+            "🌸 Main kaisi dekhti hu?",
+            "❤️ Iraade kya hain tumhare?",
+            "✈️ Ghoomne kahan jana hai yrr?",
+            "💖 Main kaisi hu?"
+        ];
+
+        const songs = [
+            "tujhe na dekhu.m4a",
+            "dekh ta hi rehta.m4a",
+            "teri adao par.m4a",
+            "hai jo irade.m4a",
+            "koi dekh le.m4a",
+            "kya ceez hai.m4a"
+        ];
+
+        const audio = document.getElementById('bg-audio');
+
+        // Loading Logic
+        window.addEventListener('DOMContentLoaded', () => {
+            let progress = 0;
+            const bar = document.getElementById('progress-bar');
+            const text = document.getElementById('progress-text');
+            
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 8) + 2;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => navigate('home-page'), 600);
+                }
+                bar.style.width = progress + '%';
+                text.innerText = progress + '%';
+            }, 100);
+
+            generateCards();
+            createStars();
+            createHearts();
+        });
+
+        // Navigation
+        function navigate(id) {
+            document.querySelectorAll('section').forEach(s => {
+                s.classList.remove('active');
+                s.classList.add('hidden');
+            });
+            const target = document.getElementById(id);
+            target.classList.remove('hidden');
+            setTimeout(() => target.classList.add('active'), 50);
+        }
+
+        function generateCards() {
+            const grid = document.getElementById('cards-grid');
+            questions.forEach((q, i) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.innerHTML = q;
+                card.onclick = () => openCard(i + 1);
+                grid.appendChild(card);
+            });
+        }
+
+        function openCard(id) {
+            document.getElementById('detail-question').innerText = questions[id-1];
+            document.getElementById('detail-image').src = `images/${id}.jpg`;
+
+            audio.pause();
+            audio.currentTime = 0;
+            audio.src = songs[id-1];
+            audio.play();
+
+            document.getElementById('play-status').innerText = "⏸ Pause";
+            navigate('detail-page');
+        }
+
+        function showMemories() {
+            audio.pause();
+            navigate('memories-page');
+        }
+
+        function goHome() {
+            audio.pause();
+            navigate('home-page');
+        }
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                document.getElementById('play-status').innerText = "⏸ Pause";
+            } else {
+                audio.pause();
+                document.getElementById('play-status').innerText = "▶ Play";
+            }
+        }
+
+        // Visual Effects
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            for (let i = 0; i < 60; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2 + 1 + 'px';
+                star.style.width = size;
+                star.style.height = size;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--dur', Math.random() * 3 + 2 + 's');
+                container.appendChild(star);
+            }
+        }
+
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            setInterval(() => {
+                const h = document.createElement('div');
+                h.className = 'heart';
+                h.innerHTML = '❤️';
+                h.style.left = Math.random() * 100 + '%';
+                h.style.fontSize = Math.random() * 15 + 10 + 'px';
+                container.appendChild(h);
+                setTimeout(() => h.remove(), 4000);
+            }, 800);
+        }
+    </script>
+</body>
+</html>
